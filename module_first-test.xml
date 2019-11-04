@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_first-test" default="compile.module.first-test">
+  <dirname property="module.first-test.basedir" file="${ant.file.module_first-test}"/>
+  
+  <property name="module.jdk.home.first-test" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.first-test" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.first-test" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.first-test" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="first-test.output.dir" value="${module.first-test.basedir}/out/production/first-test"/>
+  <property name="first-test.testoutput.dir" value="${module.first-test.basedir}/out/test/first-test"/>
+  
+  <path id="first-test.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="first-test.module.production.classpath">
+    <path refid="${module.jdk.classpath.first-test}"/>
+  </path>
+  
+  <path id="first-test.runtime.production.module.classpath">
+    <pathelement location="${first-test.output.dir}"/>
+  </path>
+  
+  <path id="first-test.module.classpath">
+    <path refid="${module.jdk.classpath.first-test}"/>
+    <pathelement location="${first-test.output.dir}"/>
+  </path>
+  
+  <path id="first-test.runtime.module.classpath">
+    <pathelement location="${first-test.testoutput.dir}"/>
+    <pathelement location="${first-test.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.first-test">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.first-test">
+    <patternset refid="excluded.from.module.first-test"/>
+  </patternset>
+  
+  <path id="first-test.module.sourcepath">
+    <dirset dir="${module.first-test.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.first-test" depends="compile.module.first-test.production,compile.module.first-test.tests" description="Compile module first-test"/>
+  
+  <target name="compile.module.first-test.production" depends="register.custom.compilers" description="Compile module first-test; production classes">
+    <mkdir dir="${first-test.output.dir}"/>
+    <javac2 destdir="${first-test.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.first-test}/javac">
+      <compilerarg line="${compiler.args.first-test}"/>
+      <bootclasspath refid="first-test.module.bootclasspath"/>
+      <classpath refid="first-test.module.production.classpath"/>
+      <src refid="first-test.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.first-test"/>
+    </javac2>
+    
+    <copy todir="${first-test.output.dir}">
+      <fileset dir="${module.first-test.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.first-test.tests" depends="register.custom.compilers,compile.module.first-test.production" description="compile module first-test; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.first-test" description="cleanup module">
+    <delete dir="${first-test.output.dir}"/>
+    <delete dir="${first-test.testoutput.dir}"/>
+  </target>
+</project>
