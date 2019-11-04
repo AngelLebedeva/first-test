@@ -6,6 +6,9 @@ public class Main {
         Dog dog = new Dog();
 
         cat.See();
+        cat.Talk();
         dog.See();
+        dog.Talk();
+
     }
 }

@@ -4,4 +4,9 @@ public class Dog implements Animal{
     public void See() {
         System.out.println("Зорко!");
     }
+
+    @Override
+    public void Talk() {
+        System.out.println("Гав-гав!");
+    }
 }
